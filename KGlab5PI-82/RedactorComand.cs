@@ -13,8 +13,8 @@ namespace KGlab5PI_82
         int X1, X2, Y1, Y2;
         int sR, sG, sB;
         private int WINSIZE;
-        private int _width;
-        private int _height;
+        public int _width;
+        public int _height;
         private string nameFile;
         private Bitmap rawImage; 
         private Dictionary<int, int> tableBrightnessForGistogramm;
@@ -153,7 +153,6 @@ namespace KGlab5PI_82
                 else K = 1/ (-value);
             }
             else K = value;
-         
 
 
                 //Y=K*(Yold-Yav)+ Yav, 
@@ -161,29 +160,36 @@ namespace KGlab5PI_82
             {
                 for (int j = 0; j < _height; j++)
                 {
-                  //  Color source2 = CURRENTimage.GetPixel(i, j);
                     Color source2 = FIRSTimage.GetPixel(i, j);
-                    R = Convert.ToInt32(K * (source2.R - sR) + sR);
-                    G = Convert.ToInt32(K * (source2.G - sG) + sG);
-                    B = Convert.ToInt32(K * (source2.B - sB) + sB);
+                    Color result;
+                    //  Color source2 = CURRENTimage.GetPixel(i, j);
+                    if (i >= X1 && i < X2 && j >= Y1 && j < Y2)
+                    {
+                      
+                        R = Convert.ToInt32(K * (source2.R - sR) + sR);
+                        G = Convert.ToInt32(K * (source2.G - sG) + sG);
+                        B = Convert.ToInt32(K * (source2.B - sB) + sB);
 
-                    if (R < 0)
-                        R = 0;
-                    else
-                    if (R > 255)
-                        R = 255;
-                    if (G < 0)
-                        G = 0;
-                    else
-                 if (G > 255)
-                        G = 255;
+                        if (R < 0)
+                            R = 0;
+                        else
+                        if (R > 255)
+                            R = 255;
+                        if (G < 0)
+                            G = 0;
+                        else
+                     if (G > 255)
+                            G = 255;
 
-                    if (B < 0)
-                        B = 0;
+                        if (B < 0)
+                            B = 0;
+                        else
+                     if (B > 255)
+                            B = 255;
+                        result = createColor(R, G, B);
+                    }
                     else
-                 if (B > 255)
-                        B = 255;
-                    Color result = createColor(R, G, B);
+                        result = createColor(source2.R, source2.G, source2.B);
                     helpMap.SetPixel(i, j, result);
                 }
             }
@@ -224,14 +230,18 @@ namespace KGlab5PI_82
                 for (int j = 0; j < _height; j++)
                 {
                     Color source = FIRSTimage.GetPixel(i, j);
-                    if ((source.R + source.G + source.B) / 3 < value)
+                    if (i >= X1 && i < X2 && j >= Y1 && j < Y2)
                     {
-                        helpMap.SetPixel(i, j, createColor(0, 0, 0));
+                        if ((source.R + source.G + source.B) / 3 < value)
+                        {
+                            helpMap.SetPixel(i, j, createColor(0, 0, 0));
+                        }
+                        else
+                        {
+                            helpMap.SetPixel(i, j, createColor(255, 255, 255));
+                        }
                     }
-                    else
-                    {
-                        helpMap.SetPixel(i, j, createColor(255, 255, 255));
-                    }
+                    else helpMap.SetPixel(i, j, createColor(source.R, source.G, source.B));
                 }
             }
             CURRENTimage = helpMap;
@@ -248,15 +258,18 @@ namespace KGlab5PI_82
                 for (int j = 0; j < _height; j++)
                 {
                     Color source = FIRSTimage.GetPixel(i, j);
-                    if ((source.R + source.G + source.B)  < (127*3))
+                    if (i >= X1 && i < X2 && j >= Y1 && j < Y2)
                     {
-                       result = createColor(0,0,0);
-                                      }
-                    else
-                    {
-                        result = createColor(255, 255, 255);
-                    } 
-                    
+                        if ((source.R + source.G + source.B) < (127 * 3))
+                        {
+                            result = createColor(0, 0, 0);
+                        }
+                        else
+                        {
+                            result = createColor(255, 255, 255);
+                        }
+                    }
+                    else result = createColor(source.R, source.G, source.B);
                     helpMap.SetPixel(i, j, result);
                 }
             }
@@ -272,8 +285,11 @@ namespace KGlab5PI_82
                 for (int j = 0; j < _height; j++)
                 {
                     CURRENTimage = FIRSTimage;
-                    int brightness = getBrightPixel(i, j);
-                    helpMap.SetPixel(i, j, Color.FromArgb(brightness, brightness, brightness));
+                    if (i >= X1 && i < X2 && j >= Y1 && j < Y2)
+                    {
+                        int brightness = getBrightPixel(i, j);
+                        helpMap.SetPixel(i, j, Color.FromArgb(brightness, brightness, brightness));
+                    } else helpMap.SetPixel(i, j, createColor(FIRSTimage.GetPixel(i, j).R, FIRSTimage.GetPixel(i, j).G, FIRSTimage.GetPixel(i, j).B));
                 }
             }
             CURRENTimage = helpMap;
@@ -290,9 +306,14 @@ namespace KGlab5PI_82
                 for (int j = 0; j < _height; j++)
                 {
                      Color source = FIRSTimage.GetPixel(i, j);
-                   // Color source = CURRENTimage.GetPixel(i, j);
-                    helpMap.SetPixel(i, j, Color.FromArgb(BLACCOLOR - source.R, BLACCOLOR - source.G, BLACCOLOR - source.B));
+                    // Color source = CURRENTimage.GetPixel(i, j);
+                    if (i >= X1 && i < X2 && j >= Y1 && j < Y2)
+                    {
+                        helpMap.SetPixel(i, j, Color.FromArgb(BLACCOLOR - source.R, BLACCOLOR - source.G, BLACCOLOR - source.B));
                 }
+                    else helpMap.SetPixel(i, j, createColor(source.R, source.G, source.B));
+
+            }
             }
             CURRENTimage = helpMap;
 
@@ -333,6 +354,21 @@ namespace KGlab5PI_82
         public void cancelChanges()
         {
             CURRENTimage = FIRSTimage;
+        }
+        public void newOblast(int x1, int x2, int y1, int y2)
+        {
+            X1 = x1;
+            X2 = x2;
+            Y1 = y1;
+            Y2 = y2;
+        }
+
+        public void oldOblast()
+        {
+            X1 = 0;
+            X2 = _width;
+            Y1 = 0;
+            Y2 = _height;
         }
     }
 }

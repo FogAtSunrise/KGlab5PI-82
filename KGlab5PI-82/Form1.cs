@@ -33,6 +33,7 @@ namespace KGlab5PI_82
             brightnessTrackBar.Enabled = value;
             contrastTrackBar.Enabled = value;
             BWTrackBar.Enabled = false;
+            button6.Enabled = false;
             button1.Enabled = value;
             button2.Enabled = value;
             button3.Enabled = value;
@@ -292,19 +293,69 @@ namespace KGlab5PI_82
             drawGistogramm(sender, e);
         }
 
+        int x1=0, x2=0, y1=0, y2=0;
+        bool fragm = false;
         private void MainPictureBox_MouseDown(object sender, MouseEventArgs e)
         {
-
+            x1 = e.X;
+            y1 = e.Y;
+            fragm = true;
         }
 
         private void MainPictureBox_MouseUp(object sender, MouseEventArgs e)
         {
+            button6.Enabled = true;
+            fragm = false;
+            if (x1 < e.X)
+                x2 = e.X;
+            else
+            { x2 = x1; 
+              x1 = e.X; }
 
+            if (y1 < e.Y)
+                y2 = e.Y;
+            else
+            {
+                y2 = y1;
+                y1 = e.Y;
+            }
+
+            PR.newOblast(x1, x2, y1, y2);
         }
 
         private void MainPictureBox_MouseLeave(object sender, EventArgs e)
         {
+            if (button6.Enabled == true)
+            {
+                if (x1 < 0)
+                    x1 = 0;
+                else if (x1 > PR._width)
+                    x1 = PR._width;
 
+                if (x2 < 0)
+                    x2 = 0;
+                else if (x2 > PR._width)
+                    x2 = PR._width;
+
+                if (y1 < 0)
+                    y1 = 0;
+                else if (y1 > PR._height)
+                    y1 = PR._height;
+
+                if (y2 < 0)
+                    y2 = 0;
+                else if (y2 > PR._height)
+                    y2 = PR._height;
+
+                PR.newOblast(x1, x2, y1, y2);
+            }
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            button6.Enabled = false;
+            PR.oldOblast();
+            button4_Click(sender, e);
         }
     }
 }

@@ -50,6 +50,7 @@ namespace KGlab5PI_82
             this.BWValueTB = new System.Windows.Forms.TextBox();
             this.BWTrackBar = new System.Windows.Forms.TrackBar();
             this.button5 = new System.Windows.Forms.Button();
+            this.button6 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.MainPictureBox)).BeginInit();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -210,21 +211,21 @@ namespace KGlab5PI_82
             // 
             // cancelChangesBrightness
             // 
-            this.cancelChangesBrightness.Location = new System.Drawing.Point(889, 524);
+            this.cancelChangesBrightness.Location = new System.Drawing.Point(884, 507);
             this.cancelChangesBrightness.Name = "cancelChangesBrightness";
             this.cancelChangesBrightness.Size = new System.Drawing.Size(88, 69);
             this.cancelChangesBrightness.TabIndex = 14;
-            this.cancelChangesBrightness.Text = "Отменить";
+            this.cancelChangesBrightness.Text = "Отменить слой";
             this.cancelChangesBrightness.UseVisualStyleBackColor = true;
             this.cancelChangesBrightness.Click += new System.EventHandler(this.button4_Click);
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(790, 524);
+            this.button4.Location = new System.Drawing.Point(785, 507);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(93, 69);
             this.button4.TabIndex = 16;
-            this.button4.Text = "Сохранить";
+            this.button4.Text = "Сохранить слой";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click_1);
             // 
@@ -263,24 +264,35 @@ namespace KGlab5PI_82
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(983, 524);
+            this.button5.Location = new System.Drawing.Point(978, 507);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(88, 69);
             this.button5.TabIndex = 18;
-            this.button5.Text = "Сбросить все";
+            this.button5.Text = "Сбросить все слои";
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(785, 590);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(281, 25);
+            this.button6.TabIndex = 19;
+            this.button6.Text = "Сбросить выделение области";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1083, 627);
+            this.Controls.Add(this.cancelChangesBrightness);
+            this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.BWTrackBar);
             this.Controls.Add(this.BWValueTB);
-            this.Controls.Add(this.cancelChangesBrightness);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
@@ -332,6 +344,7 @@ namespace KGlab5PI_82
         private System.Windows.Forms.TextBox BWValueTB;
         private System.Windows.Forms.TrackBar BWTrackBar;
         private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button button6;
     }
 }
 
