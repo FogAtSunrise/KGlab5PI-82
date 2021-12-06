@@ -105,9 +105,9 @@ namespace KGlab5PI_82
                 tableBrightnessForGistogramm.Add(i, 0);
             }
 
-            for (int i = 0; i < _width; i++)
+            for (int i = X1; i < X2; i++)
             {
-                for (int j = 0; j < _height; j++)
+                for (int j = Y1; j < Y2; j++)
                 {
                     tableBrightnessForGistogramm[getBrightPixel(i, j)]++;
                 }
@@ -125,8 +125,14 @@ namespace KGlab5PI_82
                 for (int j = 0; j < _height; j++)
                 {
                     Color source = FIRSTimage.GetPixel(i, j);
-                    Color result = createColor(source.R + value, source.G + value, source.B + value);
-
+                    Color result;
+                    if (i >= X1 && i < X2 && j >= Y1 && j < Y2)
+                    {
+                        
+                       result = createColor(source.R + value, source.G + value, source.B + value);
+                    }
+                    else
+                        result = createColor(source.R, source.G, source.B);
                     helpMap.SetPixel(i, j, result);
                 }
             }
