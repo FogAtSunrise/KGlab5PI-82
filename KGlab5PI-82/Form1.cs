@@ -17,6 +17,7 @@ namespace KGlab5PI_82
         public Form1()
         {
             InitializeComponent();
+         
             PR = new RedactorComand(MainPictureBox.Width);
             enabledControlElement(false);
            
@@ -301,6 +302,8 @@ namespace KGlab5PI_82
             y1 = e.Y;
             fragm = true;
         }
+
+       
 
         private void MainPictureBox_MouseUp(object sender, MouseEventArgs e)
         {
