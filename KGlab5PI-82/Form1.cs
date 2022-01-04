@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -20,7 +21,9 @@ namespace KGlab5PI_82
          
             PR = new RedactorComand(MainPictureBox.Width);
             enabledControlElement(false);
-           
+            PR.oldOblast();
+
+
         }
 
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
@@ -70,7 +73,7 @@ namespace KGlab5PI_82
 
         private void drawGistogramm(object sender, EventArgs e)
         {
-            Dictionary<int, int> gistogramm = PR.getBrigGistogramm();
+          /*  Dictionary<int, int> gistogramm = PR.getBrigGistogramm();
             Bitmap brightness = new Bitmap(pictureBox2.Width, pictureBox2.Height);
             Graphics grf = Graphics.FromImage(brightness);
             Pen gistogrammPen = new Pen(Color.Cyan);
@@ -91,45 +94,25 @@ namespace KGlab5PI_82
                 int schet = -period;
                 for (int h = brightness.Height; h > 0; h -= period / raznost)
                 {
-                    grf.DrawLine((new Pen(Color.Black)), new Point(0, h), new Point(brightness.Width, h));
+                    grf.DrawLine((new Pen(Color.Gray)), new Point(0, h), new Point(brightness.Width, h));
                     grf.DrawString((schet+= period).ToString(), new Font("Arial", 7), Brushes.Gray, 0, h-10);
 
                 }
-                grf.DrawLine((new Pen(Color.Gray)), new Point(i+1, brightness.Height), new Point(i+1, brightness.Height - (int)(((float)brightness.Height / maxValue) * gistogramm[i])));
+                grf.DrawLine((new Pen(Color.Black)), new Point(i+1, brightness.Height), new Point(i+1, brightness.Height - (int)(((float)brightness.Height / maxValue) * gistogramm[i])));
             }
             pictureBox2.Image = brightness;
             pictureBox2.Refresh();
             GC.Collect();
 
-           
+           */
         }
 
+        
         private void brightnessTrackBar_Scroll(object sender, EventArgs e)
         {
             brightnessValueTB.Text = brightnessTrackBar.Value.ToString();
 
-            try
-            {
-                int value = Convert.ToInt32(brightnessValueTB.Text);
-                brightnessTrackBar.Value = value;
-                PR.changeBrightness(value);
-                drawImage();
-                drawGistogramm(sender, e);
-                BWValueTB.Text = "0";
-                BWTrackBar.Enabled = false;
-                contrastValueTB.Text = "0";
-                BWTrackBar.Value = 127;
-           
-                contrastTrackBar.Value = 0;
-
-
-            }
-            catch
-            {
-                DialogResult rezult = MessageBox.Show("Ошибка изменения яркости",
-                   "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                brightnessTrackBar.Value = 0;
-            }
+            
         }
 
         private void brightnessValueTB_TextChanged(object sender, EventArgs e)
@@ -146,28 +129,6 @@ namespace KGlab5PI_82
         {
             contrastValueTB.Text = contrastTrackBar.Value.ToString();
 
-
-            try
-            {
-                double value = Convert.ToDouble(contrastValueTB.Text);
-                contrastTrackBar.Value = Convert.ToInt32(value);
-                //   value = value * 100 / 101; // ну да, захардкодил, и что с того???
-                PR.changeContrast(value);
-                drawImage();
-                BWValueTB.Text = "0";
-                BWTrackBar.Enabled = false;
-                BWTrackBar.Value = 127;
-                brightnessTrackBar.Value = 0;
-                brightnessValueTB.Text = "0";
-
-                drawGistogramm(sender, e);
-            }
-            catch
-            {
-                DialogResult rezult = MessageBox.Show("Ошибка изменения  контрастности",
-                   "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                brightnessTrackBar.Value = 0;
-            }
         }
 
         private void contrastValueTB_TextChanged(object sender, EventArgs e)
@@ -259,20 +220,7 @@ namespace KGlab5PI_82
         private void BWTrackBar_Scroll(object sender, EventArgs e)
         {
             BWValueTB.Text = BWTrackBar.Value.ToString();
-            try
-            {
-                int value = Convert.ToInt32(BWValueTB.Text);
-                BWTrackBar.Value = value;
-                PR.makeBlackWhiteImage(value);
-                drawImage();
-                drawGistogramm(sender, e);
-            }
-            catch
-            {
-                DialogResult rezult = MessageBox.Show("Так дела не делаются, не получилось преобразовать в ЧБ",
-                   "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                brightnessTrackBar.Value = 0;
-            }
+            
         }
 
         private void MainPictureBox_Click(object sender, EventArgs e)
@@ -302,33 +250,206 @@ namespace KGlab5PI_82
             y1 = e.Y;
             fragm = true;
         }
+    
+        private void brightnessTrackBar_MouseUp(object sender, MouseEventArgs e)
+        {
+            try
+            {
+                int value = Convert.ToInt32(brightnessValueTB.Text);
+                brightnessTrackBar.Value = value;
+                PR.changeBrightness(value);
+                drawImage();
+                drawGistogramm(sender, e);
 
-       
+                
+                    BWValueTB.Text = "0";
+                    BWTrackBar.Enabled = false;
+                    contrastValueTB.Text = "0";
+                    contrastTrackBar.Value = 0;
+                
+                
+                BWTrackBar.Value = 127;
+
+            }
+            catch
+            {
+                DialogResult rezult = MessageBox.Show("Ошибка изменения яркости",
+                   "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                brightnessTrackBar.Value = 0;
+            }
+        }
+
+        private void contrastTrackBar_MouseUp(object sender, MouseEventArgs e)
+        {
+
+
+            try
+            {
+                double value = Convert.ToDouble(contrastValueTB.Text);
+                contrastTrackBar.Value = Convert.ToInt32(value);
+                //   value = value * 100 / 101; // ну да, захардкодил, и что с того???
+                PR.changeContrast(value);
+                drawImage();
+                BWValueTB.Text = "0";
+                BWTrackBar.Enabled = false;
+                BWTrackBar.Value = 127;
+                brightnessTrackBar.Value = 0;
+                brightnessValueTB.Text = "0";
+
+                drawGistogramm(sender, e);
+            }
+            catch
+            {
+                DialogResult rezult = MessageBox.Show("Ошибка изменения  контрастности",
+                   "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                brightnessTrackBar.Value = 0;
+            }
+        }
+
+        private void BWTrackBar_MouseUp(object sender, MouseEventArgs e)
+        {
+            try
+            {
+                int value = Convert.ToInt32(BWValueTB.Text);
+                BWTrackBar.Value = value;
+                PR.makeBlackWhiteImage(value);
+                drawImage();
+                drawGistogramm(sender, e);
+            }
+            catch
+            {
+                DialogResult rezult = MessageBox.Show("Так дела не делаются, не получилось преобразовать в ЧБ",
+                   "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                brightnessTrackBar.Value = 0;
+            }
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            PR.AddSpeckleNoise();
+            drawImage();
+            BWTrackBar.Enabled = false;
+            BWTrackBar.Value = 127;
+            brightnessTrackBar.Value = 0;
+            contrastTrackBar.Value = 0;
+            BWValueTB.Text = "0";
+            contrastValueTB.Text = "0";
+            brightnessValueTB.Text = "0";
+            
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            //   Filters filter = new GlassFilter();
+            //  backgroundWorker1.RunWorkerAsync(filter);
+            PR.Gauss();
+            drawImage();
+            BWTrackBar.Enabled = false;
+            BWTrackBar.Value = 127;
+            brightnessTrackBar.Value = 0;
+            contrastTrackBar.Value = 0;
+            BWValueTB.Text = "0";
+            contrastValueTB.Text = "0";
+            brightnessValueTB.Text = "0";
+        }
+
+        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        {
+
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+   
+            PR.Evenly();
+            drawImage();
+            BWTrackBar.Enabled = false;
+            BWTrackBar.Value = 127;
+            brightnessTrackBar.Value = 0;
+            contrastTrackBar.Value = 0;
+            BWValueTB.Text = "0";
+            contrastValueTB.Text = "0";
+            brightnessValueTB.Text = "0";
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            int r;
+            if (textBox1.Text != "")
+            r = int.Parse(textBox1.Text);
+            else r = 8;
+            PR.Res1(r);
+            drawImage();
+            BWTrackBar.Enabled = false;
+            BWTrackBar.Value = 127;
+            brightnessTrackBar.Value = 0;
+            contrastTrackBar.Value = 0;
+            BWValueTB.Text = "0";
+            contrastValueTB.Text = "0";
+            brightnessValueTB.Text = "0";
+            textBox1.Text = "";
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+           
+        }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            PR.Res2();
+            drawImage();
+            BWTrackBar.Enabled = false;
+            BWTrackBar.Value = 127;
+            brightnessTrackBar.Value = 0;
+            contrastTrackBar.Value = 0;
+            BWValueTB.Text = "0";
+            contrastValueTB.Text = "0";
+            brightnessValueTB.Text = "0";
+        }
+
+        private void button12_Click_1(object sender, EventArgs e)
+        {
+            PR.Steklo();
+            drawImage();
+            BWTrackBar.Enabled = false;
+            BWTrackBar.Value = 127;
+            brightnessTrackBar.Value = 0;
+            contrastTrackBar.Value = 0;
+            BWValueTB.Text = "0";
+            contrastValueTB.Text = "0";
+            brightnessValueTB.Text = "0";
+        }
 
         private void MainPictureBox_MouseUp(object sender, MouseEventArgs e)
         {
-            button6.Enabled = true;
-            fragm = false;
-            if (x1 < e.X)
-                x2 = e.X;
-            else
-            { x2 = x1; 
-              x1 = e.X; }
-
-            if (y1 < e.Y)
-                y2 = e.Y;
-            else
+            if (fragm == true)
             {
-                y2 = y1;
-                y1 = e.Y;
-            }
+                button6.Enabled = true;
+                fragm = false;
+                if (x1 < e.X)
+                    x2 = e.X;
+                else
+                {
+                    x2 = x1;
+                    x1 = e.X;
+                }
 
-            PR.newOblast(x1, x2, y1, y2);
+                if (y1 < e.Y)
+                    y2 = e.Y;
+                else
+                {
+                    y2 = y1;
+                    y1 = e.Y;
+                }
+
+                PR.newOblast(x1, x2, y1, y2);
+            }
         }
 
         private void MainPictureBox_MouseLeave(object sender, EventArgs e)
         {
-            if (button6.Enabled == true)
+           if (fragm == true)
             {
                 if (x1 < 0)
                     x1 = 0;
